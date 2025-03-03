@@ -9,10 +9,10 @@ from rcl_interfaces.msg import SetParametersResult
 from wall_follower.visualization_tools import VisualizationTools
 
 
-class WallFollower(Node):
+class SafetyController(Node):
 
     def __init__(self):
-        super().__init__("safety_controller_sim")
+        super().__init__("safety_controller")
         # Declare parameters to make them available for use
         # DO NOT MODIFY THIS! 
         self.declare_parameter("estop_dist", 1.0)
@@ -92,8 +92,8 @@ class WallFollower(Node):
 
 def main():
     rclpy.init()
-    wall_follower = WallFollower()
-    rclpy.spin(wall_follower)
+    safety_controller = SafetyController()
+    rclpy.spin(safety_controller)
     wall_follower.destroy_node()
     rclpy.shutdown()
 
