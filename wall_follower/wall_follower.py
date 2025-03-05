@@ -13,11 +13,11 @@ class WallFollower(Node):
         super().__init__("wall_follower")
         
         # Declare parameters
-        self.WALL_TOPIC = "/wall"
+        # self.WALL_TOPIC = "/wall"
         
         # Update these parameters for the physical racecar
         self.declare_parameter("scan_topic", "/scan")
-        self.declare_parameter("drive_topic", "/vesc/high_level/input/nav_0")  # Updated for racecar
+        self.declare_parameter("drive_topic", "/vesc/low_level/input/navigation")  # Updated for racecar
         self.declare_parameter("side", 1)  # 1 for left, -1 for right
         self.declare_parameter("velocity", 1.0)
         self.declare_parameter("desired_distance", 0.5)
@@ -30,8 +30,8 @@ class WallFollower(Node):
         self.DESIRED_DISTANCE = self.get_parameter('desired_distance').get_parameter_value().double_value
 
         # PID Controller parameters - tuned for real robot
-        self.Kp = 5.0  # You may need to tune these for the physical robot
-        self.Kd = 6.0
+        self.Kp = 3 # You may need to tune these for the physical robot
+        self.Kd = 1
         self.prev_e = 0
         self.prev_time = self.get_clock().now()
         
@@ -40,7 +40,7 @@ class WallFollower(Node):
         self.left_or_right = self.SIDE
         
         # Publishers and Subscribers
-        self.line_pub = self.create_publisher(Marker, self.WALL_TOPIC, 1)
+        # self.line_pub = self.create_publisher(Marker, self.WALL_TOPIC, 1)
         self.drive_pub = self.create_publisher(AckermannDriveStamped, self.DRIVE_TOPIC, 10)
         self.lidar_sub = self.create_subscription(LaserScan, self.SCAN_TOPIC, self.listener_cb, 10)
         
@@ -70,7 +70,7 @@ class WallFollower(Node):
         slope, intercept = np.polyfit(x_coords, y_coords, 1)
         new_y = slope * x_coords + intercept 
 
-        VisualizationTools.plot_line(x_coords, new_y, self.line_pub, frame="/laser")
+        # VisualizationTools.plot_line(x_coords, new_y, self.line_pub, frame="/laser")
         return slope, intercept
 
     def pid_controller(self, y, r):
