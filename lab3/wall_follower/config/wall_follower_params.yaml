@@ -1,0 +1,13 @@
+/**:
+  ros__parameters:
+    wall_follower:
+      scan_topic: '/scan'
+      drive_topic: '/vesc/low_level/input/navigation'
+      side: 1  # 1 for left wall, -1 for right wall
+      velocity: 1.0
+      desired_distance: 0.5
+
+    safety_controller:
+      scan_topic: '/scan'
+      drive_topic: '/vesc/low_level/input/safety'
+      estop_dist: 1.0
