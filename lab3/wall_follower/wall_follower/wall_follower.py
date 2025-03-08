@@ -19,7 +19,7 @@ class WallFollower(Node):
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("drive_topic", "/vesc/low_level/input/navigation")  # Updated for racecar
         self.declare_parameter("side", 1)  # 1 for left, -1 for right
-        self.declare_parameter("velocity", 1.0)
+        self.declare_parameter("velocity", 0.5)
         self.declare_parameter("desired_distance", 0.5)
 
         # Fetch parameters
@@ -30,7 +30,7 @@ class WallFollower(Node):
         self.DESIRED_DISTANCE = self.get_parameter('desired_distance').get_parameter_value().double_value
 
         # PID Controller parameters - tuned for real robot
-        self.Kp = 6 # You may need to tune these for the physical robot
+        self.Kp = 16 # You may need to tune these for the physical robot
         self.Kd = 8
         self.prev_e = 0
         self.prev_time = self.get_clock().now()
@@ -68,7 +68,7 @@ class WallFollower(Node):
         y_coords = ranges * np.sin(angles)
 
         slope, intercept = np.polyfit(x_coords, y_coords, 1)
-        new_y = slope * x_coords + intercept 
+        # new_y = slope * x_coords + intercept 
 
         # VisualizationTools.plot_line(x_coords, new_y, self.line_pub, frame="/laser")
         return slope, intercept
@@ -89,6 +89,7 @@ class WallFollower(Node):
             
         self.prev_e = e
         self.prev_time = curr_time
+        self.get_logger().info(f"change in angle {u}")
         return u
 
     def listener_cb(self, scan):
