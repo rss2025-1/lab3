@@ -32,7 +32,7 @@ class SafetyController(Node):
         self.lidar_sub = self.create_subscription(LaserScan, self.SCAN_TOPIC, self.estop_cb, 10)
 
         self.should_estop = False
-
+        self.estop_dist = 1
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
         drive_msg = AckermannDriveStamped()
@@ -43,16 +43,16 @@ class SafetyController(Node):
             drive_msg.drive.speed = 0.0
             # self.get_logger().info("Emergency stop triggered!")
         else:
-            self.estop_dist = self.default_velocity ** 2 / 9.81
+            self.estop_dist = 0.5 * drive_msg.drive.speed
+            # self.get_logger().info(f"estop_dist is {self.estop_dist}")
             # drive_msg.drive.speed = self.default_velocity
-
+        self.get_logger().info(f"estop_dist is {drive_msg.drive.speed}")
         self.drive_pub.publish(drive_msg)
 
 
     def estop_cb(self, scan_msg):
         """ Processes LIDAR scan data and determines if an emergency stop is needed """
         
-        self.estop_dist = 0.5 * self.default_velocity 
         if self.i == 20:
             self.i = 0
             self.get_logger().info(f"estop_dist is {self.estop_dist}")

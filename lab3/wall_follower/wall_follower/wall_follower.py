@@ -26,7 +26,9 @@ class WallFollower(Node):
         self.SCAN_TOPIC = self.get_parameter('scan_topic').get_parameter_value().string_value
         self.DRIVE_TOPIC = self.get_parameter('drive_topic').get_parameter_value().string_value
         self.SIDE = self.get_parameter('side').get_parameter_value().integer_value
+        
         self.VELOCITY = self.get_parameter('velocity').get_parameter_value().double_value
+
         self.DESIRED_DISTANCE = self.get_parameter('desired_distance').get_parameter_value().double_value
 
         # PID Controller parameters - tuned for real robot
@@ -49,6 +51,8 @@ class WallFollower(Node):
         
         self.get_logger().info("Wall follower initialized")
         self.get_logger().info("LEFT") if self.SIDE == 1 else self.get_logger().info("RIGHT")
+        self.get_logger().info(f"wall_follower VELOCITY is {self.VELOCITY}")
+
 
     def split_by_ang_range(self, drive_msg, ang_bounds):
         """Takes in ranges and returns slice of angle from start_angle to end_angle"""
