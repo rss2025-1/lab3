@@ -23,7 +23,7 @@ class SafetyController(Node):
         self.default_velocity = 1.0
         self.ang_bounds = -np.pi/2, np.pi/2
         self.car_width = 0.5
-        self.count_threshold = 5  # Define threshold for stopping
+        self.count_threshold = 20  # Define threshold for stopping
 
         # ROS 2 Subscribers & Publishers
         self.drive_sub = self.create_subscription(
@@ -78,6 +78,8 @@ class SafetyController(Node):
         close_points_count = np.sum(mask_estop)
 
         self.should_estop = (close_points_count >= self.count_threshold)
+        if (close_points_count >= self.count_threshold):
+            self.get_logger().info(f"close_points_count: {close_points_count}")
 
 
 
