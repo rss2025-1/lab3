@@ -22,7 +22,7 @@ class SafetyController(Node):
         self.lidar_dist = 0.1  # Distance from lidar to front of car
         self.default_velocity = 1.0
         self.ang_bounds = -np.pi/2, np.pi/2
-        self.car_width = 0.5
+        self.car_width = 0.25
         self.count_threshold = 20  # Define threshold for stopping
 
         # ROS 2 Subscribers & Publishers
@@ -52,7 +52,7 @@ class SafetyController(Node):
     def estop_cb(self, scan_msg):
         """ Processes LIDAR scan data and determines if an emergency stop is needed """
         
-        self.estop_dist = 0.8 * self.default_velocity 
+        self.estop_dist = 0.2 * self.default_velocity 
         if self.i == 20:
             self.i = 0
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
@@ -60,7 +60,7 @@ class SafetyController(Node):
         angle_start, angle_end = self.ang_bounds
         num_ranges = len(scan_msg.ranges)
         ranges = np.array(scan_msg.ranges)
-
+    
         angles = np.linspace(scan_msg.angle_min, scan_msg.angle_max, num_ranges)
         mask_min_dist = np.where(ranges > self.lidar_dist)
 
