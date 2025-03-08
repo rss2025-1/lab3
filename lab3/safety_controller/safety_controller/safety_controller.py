@@ -9,7 +9,7 @@ class SafetyController(Node):
 
     def __init__(self):
         super().__init__("safety_controller")
-        
+        self.i = 0
         # Declare parameters
         self.declare_parameter("estop_dist", 1.0)
         self.declare_parameter("scan_topic", "/scan")
@@ -35,16 +35,28 @@ class SafetyController(Node):
 
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
+        drive_msg = AckermannDriveStamped()
+        drive_msg.header.stamp = self.get_clock().now().to_msg()
+        drive_msg.header.frame_id = "base_link"
+
         if self.should_estop:
-            stop_msg = AckermannDriveStamped()
-            stop_msg.drive.speed = 0.0
-            self.drive_pub.publish(stop_msg)
+            drive_msg.drive.speed = 0.0
             self.get_logger().info("Emergency stop triggered!")
+        else:
+            self.estop_dist = self.default_velocity ** 2 / 9.81
+            drive_msg.drive.speed = self.default_velocity
+
+        self.drive_pub.publish(drive_msg)
+
 
     def estop_cb(self, scan_msg):
         """ Processes LIDAR scan data and determines if an emergency stop is needed """
-        self.estop_dist = (self.default_velocity ** 2) / 9.81
-
+        
+        self.estop_dist = 0.8 * self.default_velocity 
+        if self.i == 20:
+            self.i = 0
+            self.get_logger().info(f"estop_dist is {self.estop_dist}")
+     
         angle_start, angle_end = self.ang_bounds
         num_ranges = len(scan_msg.ranges)
         ranges = np.array(scan_msg.ranges)
@@ -67,21 +79,7 @@ class SafetyController(Node):
 
         self.should_estop = (close_points_count >= self.count_threshold)
 
-    def listener_cb(self, scan):
-        """ Updates driving speed based on e-stop conditions """
-        e_stop = self.should_estop
 
-        drive_msg = AckermannDriveStamped()
-        drive_msg.header.stamp = self.get_clock().now().to_msg()
-        drive_msg.header.frame_id = "base_link"
-
-        if e_stop:
-            drive_msg.drive.speed = 0.0
-        else:
-            self.estop_dist = self.default_velocity ** 2 / 9.81
-            drive_msg.drive.speed = self.default_velocity
-
-        self.drive_pub.publish(drive_msg)
 
 
 def main():
