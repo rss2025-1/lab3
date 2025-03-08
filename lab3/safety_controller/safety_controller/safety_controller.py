@@ -55,9 +55,8 @@ class SafetyController(Node):
         self.estop_dist = 0.8 * self.default_velocity 
         if self.i == 20:
             self.i = 0
-            self.i+=1
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
-     
+        self.i+=1
         angle_start, angle_end = self.ang_bounds
         num_ranges = len(scan_msg.ranges)
         ranges = np.array(scan_msg.ranges)
