@@ -1,5 +1,0 @@
-wall_follower:
-  ros__parameters:
-    scan_topic: "/scan"
-    drive_topic: "/drive"
-    estop_dist: 0.5

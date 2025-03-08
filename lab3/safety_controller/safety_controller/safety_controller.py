@@ -37,7 +37,7 @@ class SafetyController(Node):
         """ Stops the car if emergency stop condition is met """
         if self.should_estop:
             stop_msg = AckermannDriveStamped()
-            stop_msg.drive.speed = 0
+            stop_msg.drive.speed = 0.0
             self.drive_pub.publish(stop_msg)
             self.get_logger().info("Emergency stop triggered!")
 
@@ -76,7 +76,7 @@ class SafetyController(Node):
         drive_msg.header.frame_id = "base_link"
 
         if e_stop:
-            drive_msg.drive.speed = 0
+            drive_msg.drive.speed = 0.0
         else:
             self.estop_dist = self.default_velocity ** 2 / 9.81
             drive_msg.drive.speed = self.default_velocity
