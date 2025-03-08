@@ -55,6 +55,7 @@ class SafetyController(Node):
         self.estop_dist = 0.8 * self.default_velocity 
         if self.i == 20:
             self.i = 0
+            self.i+=1
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
      
         angle_start, angle_end = self.ang_bounds
