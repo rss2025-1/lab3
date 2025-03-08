@@ -52,7 +52,7 @@ class SafetyController(Node):
     def estop_cb(self, scan_msg):
         """ Processes LIDAR scan data and determines if an emergency stop is needed """
         
-        self.estop_dist = 0.2 * self.default_velocity 
+        self.estop_dist = 0.5 * self.default_velocity 
         if self.i == 20:
             self.i = 0
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
