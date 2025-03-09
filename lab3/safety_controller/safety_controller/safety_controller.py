@@ -34,7 +34,7 @@ class SafetyController(Node):
         self.estop_dist = 1
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
-        drive_msg = AckermannDriveStamped()
+        # drive_msg = AckermannDriveStamped()
         drive_msg.header.stamp = self.get_clock().now().to_msg()
         drive_msg.header.frame_id = "base_link"
 
