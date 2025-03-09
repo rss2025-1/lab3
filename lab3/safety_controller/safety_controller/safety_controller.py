@@ -47,6 +47,7 @@ class SafetyController(Node):
         else:
             self.estop_dist = 0.5 * drive_msg.drive.speed
             drive_msg.drive.speed = self.default_velocity
+            self.drive_pub.publish(drive_msg)
             self.get_logger().info(f"should_e_stop false: driving speed: {drive_msg.drive.speed}")
 
 
