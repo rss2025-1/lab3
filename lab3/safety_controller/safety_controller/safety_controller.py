@@ -34,7 +34,6 @@ class SafetyController(Node):
         self.estop_dist = 0.5
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
-        # drive_msg = AckermannDriveStamped()
         drive_msg.header.stamp = self.get_clock().now().to_msg()
         drive_msg.header.frame_id = "base_link"
 
@@ -60,6 +59,7 @@ class SafetyController(Node):
         # angle_start, angle_end = self.ang_bounds
         # num_ranges = len(scan_msg.ranges)[180:220]
         ranges = np.array(scan_msg.ranges)[180:220]
+        self.get_logger().info(f"ranges is {ranges}")
         if np.any(ranges) < .5:
             self.get_logger().info(f"WE NEED TO STOP")
             self.should_estop = True
