@@ -59,7 +59,7 @@ class SafetyController(Node):
         # angle_start, angle_end = self.ang_bounds
          
         # ranges = np.array(scan_msg.ranges)[len(scan_msg.ranges)/2]
-        ranges = scan_msg.ranges[len(scan_msg.ranges)/2]
+        ranges = scan_msg.ranges[len(scan_msg.ranges)//2]
         self.get_logger().info(f"ranges is {ranges}")
         if ranges < .5:
             self.get_logger().info(f"WE NEED TO STOP")
