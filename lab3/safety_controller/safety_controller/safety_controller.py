@@ -55,7 +55,7 @@ class SafetyController(Node):
         if self.i == 100:
             self.i = 0
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
-            self.get_logger().info(f"drivespeed is {self.estop_dist}")
+            # self.get_logger().info(f"drivespeed is {self.estop_dist}")
         self.i+=1
         # angle_start, angle_end = self.ang_bounds
         # num_ranges = len(scan_msg.ranges)[180:220]
