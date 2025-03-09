@@ -125,7 +125,7 @@ class SafetyController(Node):
 
         # ROS 2 Subscribers & Publishers
         self.drive_sub = self.create_subscription(
-            AckermannDriveStamped, "/vesc/low_level/input/navigation", self.drive_callback, 10)
+            AckermannDriveStamped, '/vesc/low_level/ackermann_cmd', self.drive_callback, 10)
         self.drive_pub = self.create_publisher(AckermannDriveStamped, self.DRIVE_TOPIC, 10)
         self.lidar_sub = self.create_subscription(LaserScan, self.SCAN_TOPIC, self.estop_cb, 10)
 
