@@ -20,7 +20,7 @@ class SafetyController(Node):
 
         self.lidar_dist = 0.1  # Distance from lidar to front of car
         # self.default_velocity = 1.0
-        self.ang_bounds = -np.pi/2, np.pi/2
+        self.ang_bounds = -np.pi/6, np.pi/6
         self.car_width = 0.25
         self.count_threshold = 20  # Define threshold for stopping
 
@@ -55,30 +55,41 @@ class SafetyController(Node):
         if self.i == 100:
             self.i = 0
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
+            self.get_logger().info(f"drivespeed is {self.estop_dist}")
         self.i+=1
         angle_start, angle_end = self.ang_bounds
-        num_ranges = len(scan_msg.ranges)
-        ranges = np.array(scan_msg.ranges)
-    
-        angles = np.linspace(scan_msg.angle_min, scan_msg.angle_max, num_ranges)
-        mask_min_dist = np.where(ranges > self.lidar_dist)
+        num_ranges = len(scan_msg.ranges)[180:220]
+        ranges = np.array(scan_msg.ranges)[180:220]
+        if ranges < .5:
+            self.get_logger().info(f"WE NEED TO STOP")
+            self.should_estop = True
+        else:
+            self.should_estop = False
+        # angles = np.linspace(scan_msg.angle_min, scan_msg.angle_max, num_ranges)
+        # # mask_min_dist = np.where(ranges > self.lidar_dist)
 
-        ranges = ranges[mask_min_dist]
-        angles = angles[mask_min_dist]
+        # # ranges = ranges[mask_min_dist]
+        # # angles = angles[mask_min_dist]
 
-        scan_polar_vectors = np.vstack((ranges, angles))
-        scan_polar_vectors = scan_polar_vectors[:, (scan_polar_vectors[1, :] <= angle_end) & 
-                                                (scan_polar_vectors[1, :] >= angle_start)]
+        # mask_max_dist = np.where(ranges < self.estop_dist)
 
-        x_coords = ranges * np.cos(angles)
-        y_coords = ranges * np.sin(angles)
+        # ranges = ranges[mask_max_dist]
+        # angles = angles[mask_max_dist]
 
-        mask_estop = (np.abs(y_coords) <= self.car_width) & (x_coords <= self.estop_dist)
-        close_points_count = np.sum(mask_estop)
+        # scan_polar_vectors = np.vstack((ranges, angles))
+        # scan_polar_vectors = scan_polar_vectors[:, (scan_polar_vectors[1, :] <= angle_end) & 
+        #                                         (scan_polar_vectors[1, :] >= angle_start)]
+        
+        # # x_coords = ranges * np.cos(angles)
+        # # y_coords = ranges * np.sin(angles)
 
-        self.should_estop = (close_points_count >= self.count_threshold)
-        if (close_points_count >= self.count_threshold):
-            self.get_logger().info(f"close_points_count: {close_points_count}")
+
+        # mask_estop = (np.abs(y_coords) <= self.car_width) & (x_coords <= self.estop_dist)
+        # close_points_count = np.sum(mask_estop)
+
+        # self.should_estop = (close_points_count >= self.count_threshold)
+        # if (close_points_count >= self.count_threshold):
+        #     self.get_logger().info(f"close_points_count: {close_points_count}")
 
 
 
