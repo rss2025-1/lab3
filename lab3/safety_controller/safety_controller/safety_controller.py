@@ -11,7 +11,6 @@ class SafetyController(Node):
         super().__init__("safety_controller")
         self.i = 0
         # Declare parameters
-        self.declare_parameter("estop_dist", 1.0)
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("drive_topic", "/vesc/low_level/input/safety")
 
@@ -46,6 +45,7 @@ class SafetyController(Node):
             # self.get_logger().info("Emergency stop triggered!")
         else:
             self.estop_dist = 0.5 * drive_msg.drive.speed
+            drive_msg.drive.speed = self.default_velocity
          
         self.get_logger().info(f"speed is {drive_msg.drive.speed}")
 
