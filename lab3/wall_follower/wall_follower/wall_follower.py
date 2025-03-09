@@ -93,7 +93,7 @@ class WallFollower(Node):
             
         self.prev_e = e
         self.prev_time = curr_time
-        self.get_logger().info(f"change in angle {u}")
+        # self.get_logger().info(f"new angle {u}")
         return u
 
     def listener_cb(self, scan):

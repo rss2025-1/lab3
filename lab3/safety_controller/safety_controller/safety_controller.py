@@ -109,7 +109,7 @@ class SafetyController(Node):
         super().__init__("safety_controller")
         self.i = 0
         # Declare parameters
-        self.declare_parameter("estop_dist", 1.0)
+        # self.declare_parameter("estop_dist", 1.0)
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("drive_topic", "/vesc/low_level/input/safety")
 
@@ -130,7 +130,7 @@ class SafetyController(Node):
         self.lidar_sub = self.create_subscription(LaserScan, self.SCAN_TOPIC, self.estop_cb, 10)
 
         self.should_estop = False
-        self.estop_dist = 1
+        self.estop_dist = 0.5
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
         drive_msg = AckermannDriveStamped()
@@ -139,19 +139,18 @@ class SafetyController(Node):
 
         if self.should_estop:
             drive_msg.drive.speed = 0.0
-            # self.get_logger().info("Emergency stop triggered!")
+            self.get_logger().info("Emergency stop triggered!")
         else:
             self.estop_dist = 0.5 * drive_msg.drive.speed
-            # self.get_logger().info(f"estop_dist is {self.estop_dist}")
             drive_msg.drive.speed = self.default_velocity
-        self.get_logger().info(f"estop_dist is {drive_msg.drive.speed}")
+            # self.get_logger().info("Emergency stop triggered!")
         self.drive_pub.publish(drive_msg)
 
 
     def estop_cb(self, scan_msg):
         """ Processes LIDAR scan data and determines if an emergency stop is needed """
         
-        if self.i == 20:
+        if self.i == 100:
             self.i = 0
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
         self.i+=1
