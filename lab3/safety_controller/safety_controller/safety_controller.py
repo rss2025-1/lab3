@@ -41,13 +41,13 @@ class SafetyController(Node):
 
         if self.should_estop:
             drive_msg.drive.speed = 0.0
+            self.drive_pub.publish(drive_msg)
+
             # self.get_logger().info("Emergency stop triggered!")
         else:
             self.estop_dist = 0.5 * drive_msg.drive.speed
-            # self.get_logger().info(f"estop_dist is {self.estop_dist}")
-            # drive_msg.drive.speed = self.default_velocity
-        self.get_logger().info(f"estop_dist is {drive_msg.drive.speed}")
-        self.drive_pub.publish(drive_msg)
+         
+        self.get_logger().info(f"speed is {drive_msg.drive.speed}")
 
 
     def estop_cb(self, scan_msg):
