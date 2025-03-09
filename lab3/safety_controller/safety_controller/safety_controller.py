@@ -57,8 +57,8 @@ class SafetyController(Node):
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
             self.get_logger().info(f"drivespeed is {self.estop_dist}")
         self.i+=1
-        angle_start, angle_end = self.ang_bounds
-        num_ranges = len(scan_msg.ranges)[180:220]
+        # angle_start, angle_end = self.ang_bounds
+        # num_ranges = len(scan_msg.ranges)[180:220]
         ranges = np.array(scan_msg.ranges)[180:220]
         if ranges < .5:
             self.get_logger().info(f"WE NEED TO STOP")
