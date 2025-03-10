@@ -20,7 +20,7 @@ class WallFollower(Node):
         self.declare_parameter("drive_topic", "/vesc/low_level/input/navigation")  # Updated for racecar
         self.declare_parameter("side", 1)  # 1 for left, -1 for right
         self.declare_parameter("velocity", 0.8)
-        self.declare_parameter("desired_distance", 0.3) #.75
+        self.declare_parameter("desired_distance", 1) #.75
 
         # Fetch parameters
         self.SCAN_TOPIC = self.get_parameter('scan_topic').get_parameter_value().string_value
