@@ -36,7 +36,10 @@ class SafetyController(Node):
         """ Stops the car if emergency stop condition is met """
         drive_msg.header.stamp = self.get_clock().now().to_msg()
         drive_msg.header.frame_id = "base_link"
-
+        if self.i == 100:
+            self.i = 0
+            self.get_logger().info(f"estop_dist is {self.estop_dist}")
+        self.i+=1
         if self.should_estop:
             drive_msg.drive.speed = 0.0
             # self.get_logger().info("Emergency stop triggered!")
@@ -44,6 +47,9 @@ class SafetyController(Node):
 
         else:
             self.estop_dist = 0.4 * drive_msg.drive.speed
+            if self.i == 100:
+                self.get_logger().info(f"speed is {drive_msg.drive.speed}")
+      
 
 
     # def estop_cb(self, scan_msg):
@@ -71,10 +77,7 @@ class SafetyController(Node):
     def estop_cb(self, scan_msg):
         """ Processes LIDAR scan data and determines if an emergency stop is needed """
         
-        if self.i == 20:
-            self.i = 0
-            self.get_logger().info(f"estop_dist is {self.estop_dist}")
-        self.i+=1
+        
         angle_start, angle_end = self.ang_bounds
         num_ranges = len(scan_msg.ranges)
         ranges = np.array(scan_msg.ranges)
