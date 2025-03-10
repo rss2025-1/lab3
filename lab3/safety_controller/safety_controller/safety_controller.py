@@ -43,7 +43,7 @@ class SafetyController(Node):
             self.drive_pub.publish(drive_msg)
 
         else:
-            self.estop_dist = 1.3 * drive_msg.drive.speed
+            self.estop_dist = 0.4 * drive_msg.drive.speed
 
 
     # def estop_cb(self, scan_msg):
