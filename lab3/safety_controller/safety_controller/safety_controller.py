@@ -60,7 +60,7 @@ class SafetyController(Node):
         ranges = np.array(scan_msg.ranges[min_angle_index:max_angle_index+1])
         # self.get_logger().info(f"ranges is {ranges}")
         
-        ranges_satisfied = np.sum(ranges < 0.75) 
+        ranges_satisfied = np.sum(ranges < 0.5) 
         if ranges_satisfied >= self.count_threshold:
             self.get_logger().info(f"WE NEED TO STOP")
             self.should_estop = True
