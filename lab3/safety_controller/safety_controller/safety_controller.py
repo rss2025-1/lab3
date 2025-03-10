@@ -19,9 +19,9 @@ class SafetyController(Node):
         self.DRIVE_TOPIC = self.get_parameter('drive_topic').get_parameter_value().string_value
 
         self.lidar_dist = 0.1  # Distance from lidar to front of car
-        self.ang_bounds = -np.pi/10, np.pi/10
+        # self.ang_bounds = -np.pi/9, np.pi/9
         # self.car_width = 0.31
-        self.count_threshold = 10  # Define threshold for stopping
+        self.count_threshold = 7  # Define threshold for stopping
 
         # ROS 2 Subscribers & Publishers
         self.drive_sub = self.create_subscription(
@@ -50,7 +50,7 @@ class SafetyController(Node):
 
 
         else:
-            self.estop_dist = 0.59 * drive_msg.drive.speed
+            self.estop_dist = 0.6 * drive_msg.drive.speed
             if self.i == 100:
                 self.get_logger().info(f"speed is {drive_msg.drive.speed}")
       
@@ -65,8 +65,8 @@ class SafetyController(Node):
             # self.get_logger().info(f"drivespeed is {self.estop_dist}")
         self.i+=1
          
-        min_angle_index = len(scan_msg.ranges)//2 - 20
-        max_angle_index = len(scan_msg.ranges)//2 + 20
+        min_angle_index = len(scan_msg.ranges)//2 - 15
+        max_angle_index = len(scan_msg.ranges)//2 + 15
         ranges = np.array(scan_msg.ranges[min_angle_index:max_angle_index+1])
         # self.get_logger().info(f"ranges is {ranges}")
         
