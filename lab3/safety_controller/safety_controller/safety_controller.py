@@ -19,7 +19,7 @@ class SafetyController(Node):
         self.DRIVE_TOPIC = self.get_parameter('drive_topic').get_parameter_value().string_value
 
         self.lidar_dist = 0.1  # Distance from lidar to front of car
-        self.ang_bounds = -np.pi/6, np.pi/6
+        self.ang_bounds = -np.pi/7, np.pi/7
         # self.car_width = 0.31
         self.count_threshold = 30  # Define threshold for stopping
 
@@ -46,7 +46,7 @@ class SafetyController(Node):
             self.drive_pub.publish(drive_msg)
 
         else:
-            self.estop_dist = 0.58 * drive_msg.drive.speed
+            self.estop_dist = 0.56 * drive_msg.drive.speed
             if self.i == 100:
                 self.get_logger().info(f"speed is {drive_msg.drive.speed}")
       
