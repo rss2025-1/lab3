@@ -46,7 +46,7 @@ class SafetyController(Node):
             self.drive_pub.publish(drive_msg)
 
         else:
-            self.estop_dist = 0.2 * drive_msg.drive.speed
+            self.estop_dist = 0.3 * drive_msg.drive.speed
             if self.i == 100:
                 self.get_logger().info(f"speed is {drive_msg.drive.speed}")
       
@@ -68,7 +68,7 @@ class SafetyController(Node):
         
         ranges_satisfied = np.sum(ranges < self.estop_dist) 
         if ranges_satisfied >= self.count_threshold:
-            self.get_logger().info(f"WE NEED TO STOP")
+            self.get_logger().info(f"ESTOP ACTIVATED: {ranges_satisfied} points exceeding threshold")
             self.should_estop = True
         else:
             if self.i == 100:
