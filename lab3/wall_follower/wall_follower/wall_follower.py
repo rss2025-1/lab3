@@ -32,13 +32,13 @@ class WallFollower(Node):
         self.DESIRED_DISTANCE = self.get_parameter('desired_distance').get_parameter_value().double_value
 
         # PID Controller parameters - tuned for real robot
-        self.Kp = 4 # You may need to tune these for the physical robot
-        self.Kd = 2
+        self.Kp = 5 # You may need to tune these for the physical robot
+        self.Kd = 3
         self.prev_e = 0
         self.prev_time = self.get_clock().now()
         
         # LIDAR parameters
-        self.max_scan_distance = 4.0
+        self.max_scan_distance = 4.5
         self.left_or_right = self.SIDE
         
         # Publishers and Subscribers
