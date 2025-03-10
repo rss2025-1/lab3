@@ -19,7 +19,7 @@ class SafetyController(Node):
         self.DRIVE_TOPIC = self.get_parameter('drive_topic').get_parameter_value().string_value
 
         self.lidar_dist = 0.1  # Distance from lidar to front of car
-        self.ang_bounds = -np.pi/4, np.pi/4
+        self.ang_bounds = -np.pi/5, np.pi/5
         # self.car_width = 0.31
         self.count_threshold = 4  # Define threshold for stopping
 
