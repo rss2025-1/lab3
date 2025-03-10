@@ -21,7 +21,7 @@ class SafetyController(Node):
         self.lidar_dist = 0.1  # Distance from lidar to front of car
         self.ang_bounds = -np.pi/6, np.pi/6
         # self.car_width = 0.31
-        self.count_threshold = 20  # Define threshold for stopping
+        self.count_threshold = 10  # Define threshold for stopping
 
         # ROS 2 Subscribers & Publishers
         self.drive_sub = self.create_subscription(
