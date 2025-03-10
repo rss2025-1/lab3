@@ -19,7 +19,6 @@ class SafetyController(Node):
         self.DRIVE_TOPIC = self.get_parameter('drive_topic').get_parameter_value().string_value
 
         self.lidar_dist = 0.1  # Distance from lidar to front of car
-        # self.default_velocity = 1.0
         self.ang_bounds = -np.pi/6, np.pi/6
         self.car_width = 0.25
         self.count_threshold = 5  # Define threshold for stopping
@@ -32,6 +31,7 @@ class SafetyController(Node):
 
         self.should_estop = False
         self.estop_dist = 1
+        self.drive_speed = 0
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
         drive_msg.header.stamp = self.get_clock().now().to_msg()
@@ -39,13 +39,11 @@ class SafetyController(Node):
 
         if self.should_estop:
             drive_msg.drive.speed = 0.0
-            self.get_logger().info("Emergency stop triggered!")
+            # self.get_logger().info("Emergency stop triggered!")
             self.drive_pub.publish(drive_msg)
 
         else:
             self.estop_dist = 1.3 * drive_msg.drive.speed
-            # drive_msg.drive.speed = self.default_velocity
-            # self.get_logger().info("Emergency stop triggered!")
 
 
     def estop_cb(self, scan_msg):
@@ -56,47 +54,18 @@ class SafetyController(Node):
             self.get_logger().info(f"estop_dist is {self.estop_dist}")
             # self.get_logger().info(f"drivespeed is {self.estop_dist}")
         self.i+=1
-        # angle_start, angle_end = self.ang_bounds
          
-        # ranges = np.array(scan_msg.ranges)[len(scan_msg.ranges)/2]
         min_angle_index = len(scan_msg.ranges)//2 - 39
         max_angle_index = len(scan_msg.ranges)//2 + 39
         ranges = np.array(scan_msg.ranges[min_angle_index:max_angle_index+1])
         # self.get_logger().info(f"ranges is {ranges}")
-        ranges_satisfied = np.sum(ranges < self.estop_dist)
+        
+        ranges_satisfied = np.sum(ranges < self.estop_dist) if self.estop_dist != 0 else .5
         if ranges_satisfied >= self.count_threshold:
             self.get_logger().info(f"WE NEED TO STOP")
             self.should_estop = True
         else:
             self.should_estop = False
-        # angles = np.linspace(scan_msg.angle_min, scan_msg.angle_max, num_ranges)
-        # # mask_min_dist = np.where(ranges > self.lidar_dist)
-
-        # # ranges = ranges[mask_min_dist]
-        # # angles = angles[mask_min_dist]
-
-        # mask_max_dist = np.where(ranges < self.estop_dist)
-
-        # ranges = ranges[mask_max_dist]
-        # angles = angles[mask_max_dist]
-
-        # scan_polar_vectors = np.vstack((ranges, angles))
-        # scan_polar_vectors = scan_polar_vectors[:, (scan_polar_vectors[1, :] <= angle_end) & 
-        #                                         (scan_polar_vectors[1, :] >= angle_start)]
-        
-        # # x_coords = ranges * np.cos(angles)
-        # # y_coords = ranges * np.sin(angles)
-
-
-        # mask_estop = (np.abs(y_coords) <= self.car_width) & (x_coords <= self.estop_dist)
-        # close_points_count = np.sum(mask_estop)
-
-        # self.should_estop = (close_points_count >= self.count_threshold)
-        # if (close_points_count >= self.count_threshold):
-        #     self.get_logger().info(f"close_points_count: {close_points_count}")
-
-
-
 
 def main():
     rclpy.init()
