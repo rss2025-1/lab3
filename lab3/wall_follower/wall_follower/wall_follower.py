@@ -19,7 +19,7 @@ class WallFollower(Node):
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("drive_topic", "/vesc/low_level/input/navigation")  # Updated for racecar
         self.declare_parameter("side", 1)  # 1 for left, -1 for right
-        self.declare_parameter("velocity", 0.9)
+        self.declare_parameter("velocity", 0.85)
         self.declare_parameter("desired_distance", 0.75)
 
         # Fetch parameters
@@ -33,7 +33,7 @@ class WallFollower(Node):
 
         # PID Controller parameters - tuned for real robot
         self.Kp = 5 # You may need to tune these for the physical robot
-        self.Kd = 6
+        self.Kd = 8
         self.prev_e = 0
         self.prev_time = self.get_clock().now()
         
