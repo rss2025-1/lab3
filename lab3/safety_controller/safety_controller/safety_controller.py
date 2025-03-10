@@ -55,12 +55,12 @@ class SafetyController(Node):
             # self.get_logger().info(f"drivespeed is {self.estop_dist}")
         self.i+=1
          
-        min_angle_index = len(scan_msg.ranges)//2 - 39
-        max_angle_index = len(scan_msg.ranges)//2 + 39
+        min_angle_index = len(scan_msg.ranges)//2 - 15
+        max_angle_index = len(scan_msg.ranges)//2 + 15
         ranges = np.array(scan_msg.ranges[min_angle_index:max_angle_index+1])
         # self.get_logger().info(f"ranges is {ranges}")
         
-        ranges_satisfied = np.sum(ranges < 0.5) 
+        ranges_satisfied = np.sum(ranges < 0.75) 
         if ranges_satisfied >= self.count_threshold:
             self.get_logger().info(f"WE NEED TO STOP")
             self.should_estop = True
