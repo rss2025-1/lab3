@@ -33,7 +33,7 @@ class WallFollower(Node):
 
         # PID Controller parameters - tuned for real robot
         self.Kp = 5 # You may need to tune these for the physical robot
-        self.Kd = 3
+        self.Kd = 6
         self.prev_e = 0
         self.prev_time = self.get_clock().now()
         
