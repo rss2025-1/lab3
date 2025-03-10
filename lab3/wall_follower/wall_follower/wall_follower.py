@@ -38,7 +38,7 @@ class WallFollower(Node):
         self.prev_time = self.get_clock().now()
         
         # LIDAR parameters
-        self.max_scan_distance = 4.5
+        self.max_scan_distance = 3
         self.left_or_right = self.SIDE
         
         # Publishers and Subscribers
@@ -104,7 +104,7 @@ class WallFollower(Node):
         self.DESIRED_DISTANCE = self.get_parameter('desired_distance').get_parameter_value().double_value
 
         # Define scan angles based on which wall we're following
-        wall_angle_start, wall_angle_end = (-5 * (np.pi/180), 135 * (np.pi/180)) if self.SIDE == 1 else (-135 * (np.pi/180), 15*(np.pi/180))
+        wall_angle_start, wall_angle_end = (-15 * (np.pi/180), 135 * (np.pi/180)) if self.SIDE == 1 else (-135 * (np.pi/180), 15*(np.pi/180))
         
         # Process LIDAR data
         ranges, angles = self.split_by_ang_range(scan, [wall_angle_start, wall_angle_end])
