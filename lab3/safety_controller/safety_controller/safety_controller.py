@@ -43,7 +43,7 @@ class SafetyController(Node):
         if self.should_estop:
             
             # self.get_logger().info("Emergency stop triggered!")
-            drive_msg.drive.speed = -0.2
+            drive_msg.drive.speed = -1.0
             self.drive_pub.publish(drive_msg)
             drive_msg.drive.speed = 0.0
             self.drive_pub.publish(drive_msg)
