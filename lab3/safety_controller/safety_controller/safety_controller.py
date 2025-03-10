@@ -22,7 +22,7 @@ class SafetyController(Node):
         # self.default_velocity = 1.0
         self.ang_bounds = -np.pi/6, np.pi/6
         self.car_width = 0.25
-        self.count_threshold = 20  # Define threshold for stopping
+        self.count_threshold = 15  # Define threshold for stopping
 
         # ROS 2 Subscribers & Publishers
         self.drive_sub = self.create_subscription(
@@ -59,13 +59,12 @@ class SafetyController(Node):
         # angle_start, angle_end = self.ang_bounds
          
         # ranges = np.array(scan_msg.ranges)[len(scan_msg.ranges)/2]
-        middle_angle_index = len(scan_msg.ranges)//2
-        min_angle_index = len(scan_msg.ranges)//2 - 10
-        max_angle_index = len(scan_msg.ranges)//2 + 10
+        min_angle_index = len(scan_msg.ranges)//2 - 15
+        max_angle_index = len(scan_msg.ranges)//2 + 15
         ranges = np.array(scan_msg.ranges[min_angle_index:max_angle_index+1])
         # self.get_logger().info(f"ranges is {ranges}")
         ranges_satisfied = np.sum(ranges > .5)
-        if ranges_satisfied >= 5:
+        if ranges_satisfied >= self.count_threshold:
             self.get_logger().info(f"WE NEED TO STOP")
             self.should_estop = True
         else:
