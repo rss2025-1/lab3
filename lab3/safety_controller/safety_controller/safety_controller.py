@@ -46,7 +46,7 @@ class SafetyController(Node):
             self.drive_pub.publish(drive_msg)
 
         else:
-            self.estop_dist = 0.5 * drive_msg.drive.speed
+            self.estop_dist = 0.55 * drive_msg.drive.speed
             if self.i == 100:
                 self.get_logger().info(f"speed is {drive_msg.drive.speed}")
       
