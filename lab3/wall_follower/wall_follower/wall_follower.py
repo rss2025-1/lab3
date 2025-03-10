@@ -18,7 +18,7 @@ class WallFollower(Node):
         # Update these parameters for the physical racecar
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("drive_topic", "/vesc/low_level/input/navigation")  # Updated for racecar
-        self.declare_parameter("side", 1)  # 1 for left, -1 for right
+        self.declare_parameter("side", -1)  # 1 for left, -1 for right
         self.declare_parameter("velocity", 0.8)
         self.declare_parameter("desired_distance", 1.0) #.75
 
