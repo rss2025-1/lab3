@@ -31,7 +31,7 @@ class SafetyController(Node):
         self.lidar_sub = self.create_subscription(LaserScan, self.SCAN_TOPIC, self.estop_cb, 10)
 
         self.should_estop = False
-        self.estop_dist = 0.5
+        self.estop_dist = 1
     def drive_callback(self, drive_msg):
         """ Stops the car if emergency stop condition is met """
         drive_msg.header.stamp = self.get_clock().now().to_msg()
@@ -43,7 +43,7 @@ class SafetyController(Node):
             self.drive_pub.publish(drive_msg)
 
         else:
-            self.estop_dist = 0.5 * drive_msg.drive.speed
+            self.estop_dist = 1.3 * drive_msg.drive.speed
             # drive_msg.drive.speed = self.default_velocity
             # self.get_logger().info("Emergency stop triggered!")
 
@@ -59,11 +59,11 @@ class SafetyController(Node):
         # angle_start, angle_end = self.ang_bounds
          
         # ranges = np.array(scan_msg.ranges)[len(scan_msg.ranges)/2]
-        min_angle_index = len(scan_msg.ranges)//2 - 5
-        max_angle_index = len(scan_msg.ranges)//2 + 5
+        min_angle_index = len(scan_msg.ranges)//2 - 39
+        max_angle_index = len(scan_msg.ranges)//2 + 39
         ranges = np.array(scan_msg.ranges[min_angle_index:max_angle_index+1])
         # self.get_logger().info(f"ranges is {ranges}")
-        ranges_satisfied = np.sum(ranges < .5)
+        ranges_satisfied = np.sum(ranges < self.estop_dist)
         if ranges_satisfied >= self.count_threshold:
             self.get_logger().info(f"WE NEED TO STOP")
             self.should_estop = True
