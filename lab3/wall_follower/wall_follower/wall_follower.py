@@ -2,6 +2,7 @@
 import numpy as np
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Float32
 from sensor_msgs.msg import LaserScan
 from ackermann_msgs.msg import AckermannDriveStamped
 from visualization_msgs.msg import Marker
@@ -45,7 +46,8 @@ class WallFollower(Node):
         # self.line_pub = self.create_publisher(Marker, self.WALL_TOPIC, 1)
         self.drive_pub = self.create_publisher(AckermannDriveStamped, self.DRIVE_TOPIC, 10)
         self.lidar_sub = self.create_subscription(LaserScan, self.SCAN_TOPIC, self.listener_cb, 10)
-        
+        self.error_pub = self.create_publisher(Float32, "error", 10)
+
         # Parameter callback for dynamic updates
         self.add_on_set_parameters_callback(self.parameters_callback)
         
@@ -80,6 +82,7 @@ class WallFollower(Node):
     def pid_controller(self, y, r):
         """PID controller for wall following"""
         e = y - r
+        self.error_pub.publish(Float32(e))
         curr_time = self.get_clock().now()
         
         deriv = (e - self.prev_e)
@@ -104,7 +107,7 @@ class WallFollower(Node):
         self.DESIRED_DISTANCE = self.get_parameter('desired_distance').get_parameter_value().double_value
 
         # Define scan angles based on which wall we're following
-        wall_angle_start, wall_angle_end = (-25 * (np.pi/180), 135 * (np.pi/180)) if self.SIDE == 1 else (-135 * (np.pi/180), 15*(np.pi/180))
+        wall_angle_start, wall_angle_end = (-25 * (np.pi/180), 135 * (np.pi/180)) if self.SIDE == 1 else (-135 * (np.pi/180), 25*(np.pi/180))
         
         # Process LIDAR data
         ranges, angles = self.split_by_ang_range(scan, [wall_angle_start, wall_angle_end])
