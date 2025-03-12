@@ -82,7 +82,9 @@ class WallFollower(Node):
     def pid_controller(self, y, r):
         """PID controller for wall following"""
         e = y - r
-        self.error_pub.publish(Float32(e))
+        error_msg = Float32()
+        error_msg.data = e
+        self.error_pub.publish(error_msg)
         curr_time = self.get_clock().now()
         
         deriv = (e - self.prev_e)
